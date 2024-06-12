@@ -2,7 +2,10 @@ from collections import namedtuple
 from typing import NamedTuple, List
 import pickle
 import gseapy as gp
+<<<<<<< HEAD
 from config import Config
+=======
+>>>>>>> f3dea18 (Initial implementation of hypothesis genearation backend)
 
 class Enrich:
 
@@ -35,6 +38,7 @@ class Enrich:
 
     def get_coexpression_net(self, relevant_gene):
         """
+<<<<<<< HEAD
         Given a gene, tissue and cell_type, return the top correlated genes.
         :param gene: Gene ID
         :param tissue: Tissue name
@@ -44,6 +48,15 @@ class Enrich:
         #TODO: Implement this using CellxGene API
         config = Config.from_env()
         brown_preadipocytes_top_corr_genes = pickle.load(open(f"{config.data_dir}/brown_preadipocytes_irx3_corr_top_500_genes.pkl", "rb"))
+=======
+        Given a tissue and a gene, return the top correlated genes.
+        :param tissue: Tissue name
+        :param gene: Gene ID
+        :return: List of genes
+        """
+        #TODO: Implement this using CellxGene API
+        brown_preadipocytes_top_corr_genes = pickle.load(open(f"./data/brown_preadipocytes_irx3_corr_top_500_genes.pkl", "rb"))
+>>>>>>> f3dea18 (Initial implementation of hypothesis genearation backend)
         return brown_preadipocytes_top_corr_genes
 
 
@@ -54,8 +67,12 @@ class Enrich:
         library = "GO_Biological_Process_2023"
         organism = "Human"
 
+<<<<<<< HEAD
         config = Config.from_env()
         background_genes = pickle.load(open(f"{config.data_dir}/brown_preadipocytes_irx3_corr_background_genes.pkl", "rb"))
+=======
+        background_genes = pickle.load(open("./data/brown_preadipocytes_irx3_corr_background_genes.pkl", "rb"))
+>>>>>>> f3dea18 (Initial implementation of hypothesis genearation backend)
         gene_list = self.get_coexpression_net(relevant_gene)
         # gene_list = self.get_hgnc_syms(gene_list)
         # background_genes = self.get_hgnc_syms(background_genes) #TODO uncomment when working with CellxGene
