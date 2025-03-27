@@ -175,3 +175,47 @@ def plot_ld_matrices(ld_r, ld_r2, snp_names=None):
     ax[0].set_title("LD r matrix")
     ax[1].set_title("LD r2 matrix")
     plt.show()
+
+
+    def main():
+    # Load and preprocess GWAS data
+    file_path = "../data/susie/gwas/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz"
+    gwas_data_df = load_gwas_data(file_path)
+    gwas_data_df = preprocess_gwas_data(gwas_data_df)
+    
+    # Filter significant SNPs
+    significant_snp_df = filter_significant_snps(gwas_data_df)
+    significant_snp_df.to_csv("../data/susie/processed_raw_data/significant_snps.csv", index=False)
+    
+    # Prepare COJO file
+    cojo_ready_df = prepare_cojo_file(
+        significant_snp_df, 
+        "../data/susie/reformated_data_for_cojo/cojo_extracted_file.csv"
+    )
+    
+    # After running COJO analysis (external command)
+    cojo_results_df = pd.read_csv("../data/susie/cojo/all_chr/all_chr_cojo.jma.cojo", delim_whitespace=True)
+    
+    # Example analysis for a specific variant
+    variant_position = 53828066
+    region_snp_df = extract_region_snps(significant_snp_df, variant_position)
+    region_snp_df.to_csv("chr16_all_region_snps.csv")
+    
+    # Load LD matrices (after running PLINK commands)
+    ld_r = pd.read_csv("../data/susie/ALL_chr/ld/test_sig_locus_mt.ld", sep="\t", header=None)
+    ld_r2 = pd.read_csv("../data/susie/ALL_chr/ld/test_sig_locus_mt_r2.ld", sep="\t", header=None)
+    
+    # Plot LD matrices
+    plot_ld_matrices(ld_r, ld_r2)
+    
+    # Run SuSiE analysis
+    fit = run_susie_analysis(
+        region_snp_df, 
+        ld_r.values,
+        n=503,
+        L=10
+    )
+    
+    # Plot results
+    plot_susie_results(region_snp_df, fit, ld_r.values, col_to_plot="MLOG10P")
+    plot_susie_results(region_snp_df, fit, ld_r.values, col_to_plot="pip")
