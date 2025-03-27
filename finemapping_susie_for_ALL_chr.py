@@ -9,7 +9,6 @@ import rpy2.robjects as ro
 import rpy2.robjects.numpy2ri as numpy2ri
 import rpy2.robjects.pandas2ri as pandas2ri
 
-
 # Activate R-Python converters
 numpy2ri.activate()
 pandas2ri.activate()
@@ -33,7 +32,6 @@ def preprocess_gwas_data(gwas_data_df):
     
     return gwas_data_df
 
-
 def filter_significant_snps(gwas_data_df, maf_threshold=0.05, p_threshold=5e-8):
     """Filter significant SNPs based on MAF and p-value thresholds."""
     # Apply filters
@@ -42,7 +40,6 @@ def filter_significant_snps(gwas_data_df, maf_threshold=0.05, p_threshold=5e-8):
     significant_snp_df = significant_snp_df[~significant_snp_df['SNPID'].str.startswith('X:')]
     
     return significant_snp_df
-
 
 def prepare_cojo_file(significant_snp_df, output_path):
     """Prepare data for COJO analysis and save to file."""
@@ -60,7 +57,6 @@ def prepare_cojo_file(significant_snp_df, output_path):
     cojo_ready_df = formatted_cojo_df[['SNP', 'A1', 'A2', 'freq', 'b', 'se', 'p', 'N']]
     cojo_ready_df.to_csv(output_path, sep=" ", index=False)
     return cojo_ready_df
-
 
 def extract_region_snps(significant_snp_df, variant_position, window_size=500000):
     """Extract SNPs within a window around a variant position."""
@@ -88,7 +84,6 @@ def run_susie_analysis(snp_df, ld_matrix, n=503, L=10):
     
     return fit
 
-
 def get_credible_sets(fit, ld_matrix, coverage=0.95, min_abs_corr=0.5):
     """Get credible sets from SuSiE fit."""
     susieR = importr('susieR')
@@ -99,7 +94,6 @@ def get_credible_sets(fit, ld_matrix, coverage=0.95, min_abs_corr=0.5):
         Xcorr=ld_matrix
     )
     return credible_sets
-
 
 def plot_susie_results(snp_df, fit, ld_matrix, col_to_plot="MLOG10P", window_size=500000):
     """Plot SuSiE results with credible sets."""
@@ -157,7 +151,6 @@ def plot_susie_results(snp_df, fit, ld_matrix, col_to_plot="MLOG10P", window_siz
     plt.legend()
     plt.show()
 
-
 def plot_ld_matrices(ld_r, ld_r2, snp_names=None):
     """Plot LD matrices (r and r2)."""
     plt.figure(figsize=(10, 10), dpi=200)
@@ -176,8 +169,7 @@ def plot_ld_matrices(ld_r, ld_r2, snp_names=None):
     ax[1].set_title("LD r2 matrix")
     plt.show()
 
-
-    def main():
+def main():
     # Load and preprocess GWAS data
     file_path = "../data/susie/gwas/21001_raw.gwas.imputed_v3.both_sexes.tsv.bgz"
     gwas_data_df = load_gwas_data(file_path)
@@ -220,6 +212,5 @@ def plot_ld_matrices(ld_r, ld_r2, snp_names=None):
     plot_susie_results(region_snp_df, fit, ld_r.values, col_to_plot="MLOG10P")
     plot_susie_results(region_snp_df, fit, ld_r.values, col_to_plot="pip")
 
-
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
