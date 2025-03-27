@@ -60,3 +60,15 @@ def prepare_cojo_file(significant_snp_df, output_path):
     cojo_ready_df = formatted_cojo_df[['SNP', 'A1', 'A2', 'freq', 'b', 'se', 'p', 'N']]
     cojo_ready_df.to_csv(output_path, sep=" ", index=False)
     return cojo_ready_df
+
+
+def extract_region_snps(significant_snp_df, variant_position, window_size=500000):
+    """Extract SNPs within a window around a variant position."""
+    start_pos = variant_position - window_size
+    end_pos = variant_position + window_size
+    region_snp_df = significant_snp_df[
+        (significant_snp_df['POS'] >= start_pos) & 
+        (significant_snp_df['POS'] <= end_pos)
+    ]
+    region_snp_df["log_pvalue"] = -np.log10(region_snp_df["P"])
+    return region_snp_df
