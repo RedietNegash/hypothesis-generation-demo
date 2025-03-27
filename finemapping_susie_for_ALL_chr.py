@@ -99,3 +99,60 @@ def get_credible_sets(fit, ld_matrix, coverage=0.95, min_abs_corr=0.5):
         Xcorr=ld_matrix
     )
     return credible_sets
+
+
+def plot_susie_results(snp_df, fit, ld_matrix, col_to_plot="MLOG10P", window_size=500000):
+    """Plot SuSiE results with credible sets."""
+    # Prepare data
+    if col_to_plot == "MLOG10P":
+        snp_df[col_to_plot] = -np.log10(snp_df["P"])
+    
+    lead_pos = snp_df["P"].idxmin()
+    lead_x = snp_df.loc[lead_pos, "POS"]
+    lead_y = snp_df.loc[lead_pos, col_to_plot]
+    
+    # Get credible sets
+    credible_sets = get_credible_sets(fit, ld_matrix)[0]
+    n_cs = len(credible_sets)
+    
+    # Create figure
+    plt.style.use("ggplot")
+    fig, ax = plt.subplots(figsize=(15, 7))
+    
+    # Plot all SNPs
+    p = ax.scatter(
+        snp_df["POS"], 
+        snp_df[col_to_plot], 
+        c=ld_matrix[lead_pos]
+    )
+    
+    # Annotate lead variant
+    ax.annotate(
+        f"Lead Variant: {snp_df.loc[lead_pos, 'SNPID']}", 
+        (lead_x, lead_y), 
+        textcoords="offset points", 
+        xytext=(0, lead_y + (0.02 if col_to_plot == "pip" else 2)), 
+        ha='center', 
+        fontsize=12
+    )
+    
+    # Highlight credible sets
+    for i in range(n_cs):
+        cs_index = credible_sets[i]
+        pos = snp_df.loc[np.array(cs_index) - 1, "POS"]
+        y = snp_df.loc[np.array(cs_index) - 1, col_to_plot]
+        ax.scatter(
+            pos, y, 
+            marker='o', s=40, 
+            label=f"CS{i+1}", 
+            edgecolors="green", 
+            facecolors="none"
+        )
+    
+    # Set plot attributes
+    plt.colorbar(p, label="LD to lead variant")
+    ax.set_xlabel("Position")
+    ax.set_ylabel(col_to_plot)
+    ax.set_xlim((lead_x - window_size, lead_x + window_size))
+    plt.legend()
+    plt.show()
