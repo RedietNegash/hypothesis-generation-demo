@@ -156,3 +156,22 @@ def plot_susie_results(snp_df, fit, ld_matrix, col_to_plot="MLOG10P", window_siz
     ax.set_xlim((lead_x - window_size, lead_x + window_size))
     plt.legend()
     plt.show()
+
+
+def plot_ld_matrices(ld_r, ld_r2, snp_names=None):
+    """Plot LD matrices (r and r2)."""
+    plt.figure(figsize=(10, 10), dpi=200)
+    fig, ax = plt.subplots(ncols=2, figsize=(20, 10))
+    
+    if snp_names is not None:
+        ld_r.columns = snp_names
+        ld_r.index = snp_names
+        ld_r2.columns = snp_names
+        ld_r2.index = snp_names
+    
+    sns.heatmap(data=ld_r, cmap="Spectral", ax=ax[0])
+    sns.heatmap(data=ld_r2, cmap="Spectral", ax=ax[1])
+    
+    ax[0].set_title("LD r matrix")
+    ax[1].set_title("LD r2 matrix")
+    plt.show()
