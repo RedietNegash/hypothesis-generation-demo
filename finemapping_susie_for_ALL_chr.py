@@ -72,3 +72,18 @@ def extract_region_snps(significant_snp_df, variant_position, window_size=500000
     ]
     region_snp_df["log_pvalue"] = -np.log10(region_snp_df["P"])
     return region_snp_df
+
+def run_susie_analysis(snp_df, ld_matrix, n=503, L=10):
+    """Run SuSiE analysis on SNP data with LD matrix."""
+    susieR = importr('susieR')
+    ro.r('set.seed(123)')
+    
+    fit = susieR.susie_rss(
+        bhat=snp_df["beta"].values.reshape(len(snp_df), 1),
+        shat=snp_df["se"].values.reshape(len(snp_df), 1),
+        R=ld_matrix,
+        L=L,
+        n=n
+    )
+    
+    return fit
