@@ -87,3 +87,15 @@ def run_susie_analysis(snp_df, ld_matrix, n=503, L=10):
     )
     
     return fit
+
+
+def get_credible_sets(fit, ld_matrix, coverage=0.95, min_abs_corr=0.5):
+    """Get credible sets from SuSiE fit."""
+    susieR = importr('susieR')
+    credible_sets = susieR.susie_get_cs(
+        fit, 
+        coverage=coverage, 
+        min_abs_corr=min_abs_corr, 
+        Xcorr=ld_matrix
+    )
+    return credible_sets
