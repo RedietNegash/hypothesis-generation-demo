@@ -185,3 +185,7 @@ fabric.properties
 .idea/
 
 .vscode/
+.qodo
+
+
+my_env
