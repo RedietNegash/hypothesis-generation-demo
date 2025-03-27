@@ -42,3 +42,21 @@ def filter_significant_snps(gwas_data_df, maf_threshold=0.05, p_threshold=5e-8):
     significant_snp_df = significant_snp_df[~significant_snp_df['SNPID'].str.startswith('X:')]
     
     return significant_snp_df
+
+
+def prepare_cojo_file(significant_snp_df, output_path):
+    """Prepare data for COJO analysis and save to file."""
+    formatted_cojo_df = significant_snp_df.rename(columns={
+        'SNPID': 'SNP',
+        'A1': 'A1',
+        'A2': 'A2',
+        'minor_AF': 'freq',
+        'beta': 'b',
+        'se': 'se',
+        'P': 'p',
+        'n_complete_samples': 'N'
+    })
+    
+    cojo_ready_df = formatted_cojo_df[['SNP', 'A1', 'A2', 'freq', 'b', 'se', 'p', 'N']]
+    cojo_ready_df.to_csv(output_path, sep=" ", index=False)
+    return cojo_ready_df
