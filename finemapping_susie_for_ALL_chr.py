@@ -32,3 +32,13 @@ def preprocess_gwas_data(gwas_data_df):
     gwas_data_df = gwas_data_df.rename(columns={'variant': 'SNPID', 'pval': 'P'})
     
     return gwas_data_df
+
+
+def filter_significant_snps(gwas_data_df, maf_threshold=0.05, p_threshold=5e-8):
+    """Filter significant SNPs based on MAF and p-value thresholds."""
+    # Apply filters
+    minor_af_filtered_df = gwas_data_df[gwas_data_df['minor_AF'] > maf_threshold]
+    significant_snp_df = minor_af_filtered_df[minor_af_filtered_df['P'] <= p_threshold]
+    significant_snp_df = significant_snp_df[~significant_snp_df['SNPID'].str.startswith('X:')]
+    
+    return significant_snp_df
