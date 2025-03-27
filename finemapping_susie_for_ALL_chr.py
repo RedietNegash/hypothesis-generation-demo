@@ -10,3 +10,6 @@ import rpy2.robjects.numpy2ri as numpy2ri
 import rpy2.robjects.pandas2ri as pandas2ri
 
 
+# Activate R-Python converters
+numpy2ri.activate()
+pandas2ri.activate()
