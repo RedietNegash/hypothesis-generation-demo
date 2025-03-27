@@ -19,3 +19,16 @@ def load_gwas_data(file_path):
     with gzip.open(file_path, 'rt') as f:
         gwas_data_df = pd.read_csv(f, sep='\t')
     return gwas_data_df
+
+def preprocess_gwas_data(gwas_data_df):
+    """Preprocess GWAS data by splitting variant info and renaming columns."""
+    # Split variant information
+    gwas_data_df['CHR'] = gwas_data_df['variant'].str.split(':').str[0]
+    gwas_data_df['POS'] = gwas_data_df['variant'].str.split(':').str[1]
+    gwas_data_df['A2'] = gwas_data_df['variant'].str.split(':').str[2]
+    gwas_data_df['A1'] = gwas_data_df['variant'].str.split(':').str[3]
+    
+    # Rename columns
+    gwas_data_df = gwas_data_df.rename(columns={'variant': 'SNPID', 'pval': 'P'})
+    
+    return gwas_data_df
