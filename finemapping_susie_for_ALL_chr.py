@@ -219,3 +219,7 @@ def plot_ld_matrices(ld_r, ld_r2, snp_names=None):
     # Plot results
     plot_susie_results(region_snp_df, fit, ld_r.values, col_to_plot="MLOG10P")
     plot_susie_results(region_snp_df, fit, ld_r.values, col_to_plot="pip")
+
+
+    if __name__ == "__main__":
+        main()
