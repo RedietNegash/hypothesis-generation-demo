@@ -13,3 +13,9 @@ import rpy2.robjects.pandas2ri as pandas2ri
 # Activate R-Python converters
 numpy2ri.activate()
 pandas2ri.activate()
+
+def load_gwas_data(file_path):
+    """Load GWAS data from a compressed TSV file."""
+    with gzip.open(file_path, 'rt') as f:
+        gwas_data_df = pd.read_csv(f, sep='\t')
+    return gwas_data_df
