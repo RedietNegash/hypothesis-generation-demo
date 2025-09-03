@@ -608,7 +608,7 @@ def __(np, soma, sparse, pearsonr, warnings, ConstantInputWarning, tqdm, use_tqd
                     return [], [], []
 
                 obs_joinids = axis_query.obs_joinids().to_numpy()
-                if len(obs_joinids) > 10000:
+                if len(obs_joinids) > 100000:
                     obs_joinids = obs_joinids[:100000] 
                     n = 100000
                 else:
