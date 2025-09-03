@@ -758,7 +758,7 @@ def __(np, soma, sparse, pearsonr, warnings, ConstantInputWarning, tqdm, use_tqd
 
 @app.cell
 def __(CellxgeneMock, json, ontology_mapping_results):
-    gene_of_interest = 'ENSG00000140718' # FTO
+    gene_of_interest = 'ENSG00000140718' #FTO
     # gene_of_interest = 'ENSG00000177508'  # IRX3
     cell_type = 'preadipocyte' 
     cellxgene_analysis = CellxgeneMock()
