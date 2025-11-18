@@ -117,7 +117,7 @@ Please provide your response in JSON format with the following structure:
         return results
 
 def main():
-    API_KEY = "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"
+    API_KEY = ""
     mapper = TissueMappingAgent(API_KEY)
     
     sample_tissue = {
